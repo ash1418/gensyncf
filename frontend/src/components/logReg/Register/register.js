@@ -85,7 +85,8 @@
 // export default Register;
 
 import React, { useState } from 'react';
-import axios from "axios"
+import axios from "axios";
+import {useNavigate} from 'react-router-dom';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -106,7 +107,7 @@ const RegisterForm = () => {
     },
     skills: [''], 
   });
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     
@@ -129,6 +130,8 @@ const RegisterForm = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
@@ -136,7 +139,9 @@ const RegisterForm = () => {
       .then((response) => {
         console.log('Registration successful:', response.data);
         // Handle success (e.g., show a success message or redirect)
+        navigate('/');
       })
+
       .catch((error) => {
         console.error('Error:', error);
         

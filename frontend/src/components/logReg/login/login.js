@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {Link , useNavigate } from "react-router-dom"
 import axios from "axios"
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,10 +20,15 @@ const Login = () => {
     axios
       .post('http://localhost:4000/student/login', formData)
       .then((response) => {
+        
+        const token = response.data.token;
+
         //return  <Link to={'/'}>back</Link>
         console.log('Login successful:', response.data);
         // Handle success (e.g., show a success message or redirect)
-
+        toast.success('Login successful');
+        
+        localStorage.setItem('token',token)
         navigate('/');
       })
       .catch((error) => {
