@@ -38,6 +38,7 @@ import React, { useState, useEffect} from 'react';
 import Axios from 'axios';
 import {Link, useNavigate} from "react-router-dom";
 import { toast } from 'react-toastify';
+import style from './profile.module.css';
 
 
 function Profile() {
@@ -127,6 +128,7 @@ function Profile() {
   };
 
   return (
+    
     <div>
       <h1>Profile Page</h1>
       {isEditing ? (
@@ -210,8 +212,8 @@ function Profile() {
           <p>Start Year: {profileData.startYear}</p>
           <p>End Year: {profileData.endYear}</p>
           <p>Mobile Number: {profileData.mobileNumber}</p>
-          <p>LinkedIn: {profileData.socialProfiles.linkedin}</p>
-          <p>Github: {profileData.socialProfiles.github}</p>
+          <p>LinkedIn: <a href={profileData.socialProfiles.linkedin}>{profileData.socialProfiles.linkedin}</a></p>
+          <p>Github:  <a href={profileData.socialProfiles.github}>{profileData.socialProfiles.github}</a></p>
           <p>Image URL: {profileData.imageUrl}</p>
           <p>Skills: {profileData.skills.join(', ')}</p>
           {/* Display other profile information */}
@@ -220,6 +222,9 @@ function Profile() {
       )}
             <button onClick={handleLogoutClick}>Logout</button>
     </div>
+  
+  
+
   );
 }
 
