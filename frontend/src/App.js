@@ -13,6 +13,7 @@ import {BrowserRouter as Router, RouterProvider,Routes,Route,Link} from "react-r
 import { useState,useEffect } from "react";
 // import PrivateRoute from './PrivateRoute'; 
 import { createBrowserRouter} from "react-router-dom";
+import AdminLogin from "./components/logReg/login/adminlogin";
 
 
 function App() {
@@ -35,11 +36,11 @@ function App() {
       {path:'/Register', element:<Register/>},
       {path:'/notices', element:<Notices/>},
       {path:'/events', element:<Events/>},
-      {path:'/profile', element:<Profile/>}
+      {path:'/profile', element:<Profile/>},
+      {path:'/adminlogin', element:<AdminLogin/>}
       // {path:'/profile',
       //  element:<PrivateRoute component={Profile} 
       //  isAuthenticated={isAuthenticated} /> },
-
 
     ],
   },

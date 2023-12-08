@@ -1,28 +1,110 @@
-/* footer.module.css */
-.footer {
-  height: auto;
-  background: black;
-  color: #fff;
-  text-align: center;
-  padding: 0.5rem 0;
-  /* position: fixed; */
-  bottom: 0;
+.location{
+  width: 80%;
+  margin: auto;
+  padding: 80px 0;
+}
+h5{
+  color: white;
+}
+.location iframe{
   width: 100%;
 }
-.container-feed{
-  margin: 0;
+
+.contactUs{
+  width: 85%;
+  margin: auto;
+  background-color: black;
+}
+
+.contactcol{
+  /* border: 2px solid yellow; */
+  flex-basis: 48%;
+  float: left;
+  width: 50%; /* Adjust the width as per your layout */
+  /* margin-right: 2%; Provide some spacing between columns */
+  margin-bottom: 10px; 
+}
+
+.contactcol div{
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.infoo{
+  width: 40%;
+}
+.formm{
+  height: 400px;
+  float: right;
+  width: 50%;
+  margin-top: 2%;
+
+}
+.redbtn{
+  /* height: 200%; */
+  width: 25%;
+  color: black;
+}
+.redbtn:hover{
+  color: white;
+  background-color: red;
+}
+
+.cart{
+  display: flex;
+}
+.contactcol div .fa{
+  font-size: 28px;
+  color: #f44336;
+  margin: 10px;
+  margin-right: 30px;
+}
+
+.contactcol div p{
   padding: 0;
-  height: auto;
+  color: white;
 }
 
-.link {
-  color: #00f;
-  text-decoration: none;
+.contactcol div h5{
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: 400;
 }
 
-.link:hover {
-  text-decoration: underline;
+
+.contactcol input, .contactcol textarea{
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 17px;
+  outline: none;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
-.container-foot{
-  height: 2px;
-}
+ .footer {
+    height: auto;
+    background: black;
+    color: #fff;
+    text-align: center;
+    padding: 0.5rem 0;
+    bottom: 0;
+    width: 100%;
+  }
+  /*
+  .container-feed{
+    margin: 0;
+    padding: 0;
+    height: auto;
+  }
+  
+  .link {
+    color: #00f;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  .container-foot{
+    height: 2px;
+  } */

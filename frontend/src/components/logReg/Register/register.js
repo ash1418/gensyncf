@@ -92,6 +92,7 @@ import Style from './register.module.css'
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     email: '',
+    //verificationCode: '',
     password: '',
     startYear: '',
     endYear: '',
@@ -101,17 +102,22 @@ const RegisterForm = () => {
     firstName: '',
     lastName: '',
     mobileNumber: '',
-    imageUrl: '',
+    //imageUrl: '',
     socialProfiles: {
       linkedin: '',
       github: '',
     },
+    Pimage:'',
     skills: [''], 
   });
   
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+     
+    // if (name === 'verificationCode') {
+    //   setFormData({ ...formData, [name]: value });
+    // }
+
     // setFormData({ ...formData, [name]: value });
     if (name.startsWith('socialProfiles.')) {
       // Update socialProfiles field
@@ -170,6 +176,9 @@ const RegisterForm = () => {
     setFormData({ ...formData, skills });
   };
 
+  const handleVerificationCodeChange = (e) => {
+    setFormData({ ...formData, verificationCode: e.target.value });
+  };
 
   return (
     <>
@@ -204,7 +213,16 @@ const RegisterForm = () => {
           onChange={handleChange}
         />
         </div>
-
+        {/* <div className={Style.userinputbox}>
+          <input
+            type="text"
+            name="verificationCode"
+            placeholder="Verification Code"
+          
+            value={formData.verificationCode}
+            onChange={handleVerificationCodeChange}
+          />
+        </div> */}
         <div className={Style.userinputbox}>
         <input
           type="password"
@@ -322,7 +340,7 @@ const RegisterForm = () => {
           />
           </div>
 
-          <div className={Style.userinputbox}>
+          {/* <div className={Style.userinputbox}>
           <input
             type="text"
             name="imageUrl"
@@ -330,7 +348,7 @@ const RegisterForm = () => {
             value={formData.imageUrl}
             onChange={handleChange}
           />
-          </div>
+          </div> */}
 
            {/* <div className={Style.genderdetailsbox}>
             <span className={Style.gendertitle}>Gender</span>

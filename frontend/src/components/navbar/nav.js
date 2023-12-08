@@ -3,9 +3,10 @@ import style from "./nav.module.css";
 // import "./navn.css"
 import { Outlet , Link} from "react-router-dom";
 import Footer from "../Footer/footer";
+import { useAuth } from '../../../src/contexts/AuthContext';
 
 function Nav() {
-  
+  const { isAuthenticated } = useAuth();
   return (
     <>
     <nav>
@@ -22,8 +23,10 @@ function Nav() {
           <Link to="/notices">Notices</Link>
           <Link to="/events">Events</Link>
           <Link to="/alumni">Alumni</Link>
-          <Link to="/login">Login</Link>
-          <Link to={'/profile'}>Profile</Link>
+          {isAuthenticated ? null : <Link to={'/login'}>Login</Link>  }
+          {/* <Link to="/login">Login</Link> */}
+          {console.log("profile visible")}
+          {isAuthenticated ?  <Link to={'/profile'}>Profile</Link> : null}
         </div>
       </div>
     </nav>

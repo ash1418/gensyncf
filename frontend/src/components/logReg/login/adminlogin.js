@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import {Link , useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast } from 'react-toastify';
-import style from "./login.module.css";
-import { useAuth } from '../../../../src/contexts/AuthContext';
+import style from "./login.module.css"
 
-const Login = (/*setIsAuthenticated*/) => {
-//  const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const { setIsAuthenticated } = useAuth();
+const AdminLogin = (setIsAuthenticated) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -22,7 +19,7 @@ const Login = (/*setIsAuthenticated*/) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:4000/student/login', formData)
+      .post('http://localhost:4000/admin/login', formData)
       .then((response) => {
         
         const token = response.data.token;
@@ -34,7 +31,7 @@ const Login = (/*setIsAuthenticated*/) => {
         
         localStorage.setItem('token',token)
 
-        setIsAuthenticated(true);
+        //setIsAuthenticated(true);
 
         navigate('/');
       })
@@ -60,7 +57,7 @@ const Login = (/*setIsAuthenticated*/) => {
 		<div className= {style.logincontent}>
     <form className ={style.myform} onSubmit={handleSubmit}>
 				<img src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/82b8d8efd3b0ac6382b9d0d71a99c6cf9dcefa23/img/avatar.svg"/>
-				<h2 className= {style.title}>Student Login</h2>
+				<h2 className= {style.title}>Admin Login</h2>
            		<div className= {style.inputdivone}>
            		   <div className={style.i}>
            		   		<i className= {style.fasfauser}></i>
@@ -95,10 +92,8 @@ const Login = (/*setIsAuthenticated*/) => {
             	<a className="style.anchor" href="#">Forgot Password?</a>
             	<input type="submit" class="btn" value="Login"/>
             </form>
-            <Link to={'/Register'}>Register</Link>
-            <h1>||</h1>
-            
-            <Link to={'/adminlogin'}>Admin Login</Link>
+            {/* <Link to={'/Register'}>Register</Link> */}
+            <Link to={'/login'}>Student Login</Link>
             
         </div>
     </div>
@@ -135,5 +130,5 @@ const Login = (/*setIsAuthenticated*/) => {
   );
 };
 
-export default Login;
+export default AdminLogin;
 
