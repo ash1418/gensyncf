@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
+const ProfileImage_PATH = path.join('/uploads/users/avatars');
+const multer = require('multer');
 
 const _ = require('lodash');
 
@@ -19,22 +23,82 @@ const {studentAuth} = require('../../middleware/studentAuth.js');
  @Route: /register
  @Desc: Sign-up
 */
-router.post('/register', (req, res) => {
 
-    var student = new Student(req.body)
+// Multer setup
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, ProfileImage_PATH);
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    },
+  });
+  
+  const upload = multer({
+    storage: storage,
+  });
+
+router.post('/register',  (req, res) => {
     
-    student.save().then(() => {
-        return student.generateAuthToken();
-    })
-    .then((token) => {
-        res.header('x-auth',token).send(student);
-    })
+        const student = new Student(req.body);
+        
+        student.save().then(() => {
+            return student.generateAuthToken();
+        })
+        .then((token) => {
+            res.header('x-auth',token).send(student);
+        })
+        
+        .catch((err) => {console.log(err);
+            res.status(500).send(err);
+        });
+        // Generate verification code
+
+        // const verificationCode = student.generateVerificationCode();
     
-    .catch((err) => {console.log(err);
-        res.status(500).send(err);
+        // Save the student with the verification code
+        //await student.save();
+        
+
+        // Send the verification code to the student's email
+        // const mailOptions = {
+        //   from: 'your-email@gmail.com',
+        //   to: student.email,
+        //   subject: 'Email Verification Code',
+        //   text: `Your verification code is: ${verificationCode}`,
+        // };
+    
+        // transporter.sendMail(mailOptions, (error, info) => {
+        //   if (error) {
+        //     console.error('Email sending error:', error);
+        //     res.status(500).send({ error: 'Internal Server Error' });
+        //   } else {
+        //     console.log('Email sent:', info.response);
+        //     res.status(201).send({ message: 'Student registered successfully. Check your email for verification.' });
+         // }
+        //});
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).send({ error: 'Internal Server Error' });
+    //   }
     });
 
-});
+//     var student = new Student(req.body)
+//     // Generate verification code
+//     const verificationCode = student.generateVerificationCode();
+
+//     student.save().then(() => {
+//         return student.generateAuthToken();
+//     })
+//     .then((token) => {
+//         res.header('x-auth',token).send(student);
+//     })
+    
+//     .catch((err) => {console.log(err);
+//         res.status(500).send(err);
+//     });
+
+// });
 
 
 //login
@@ -67,26 +131,134 @@ router.get('/profile', studentAuth ,(req, res) => {
     res.send(req.student);
 })
 
-router.patch('/profile', studentAuth, (req, res) => {
-    var student = req.student;
+// router.patch('/profile', studentAuth, (req, res) => {
+//     var student = req.student;
 
-    Student
-        .findByIdAndUpdate(
+//     Student
+//         .findByIdAndUpdate(
 
-            {_id: student._id},  
-            req.body,
-            {new: true}  //Default value is False and it sends the old document. This statement means to send "new" (updated document) back, instead of old document.
+//             {_id: student._id},  
+//             req.body,
+//             {new: true}  //Default value is False and it sends the old document. This statement means to send "new" (updated document) back, instead of old document.
         
-            )
-        .select('-tokens')
-        .then((student) => {
-            res.send(student);
-        })
-        .catch((err) => {
-            res.status(500).send(err)
-        })
-});
+//             )
+//         .select('-tokens')
+//         .then((student) => {
+//             res.send(student);
+//         })
+//         .catch((err) => {
+//             res.status(500).send(err)
+//         })
+// });
 
+router.patch('/profile/:id',  studentAuth, upload.single('Pimage'), async (req, res) => {
+    // if (req.student.id == req.params.id) {
+    //     try {
+          
+    //         let student = await Student.findByIdAndUpdate(req.params.id, req.body);
+    //         Student.uploadedAvatar(req,res,function(err){
+     
+    //           if(err){console.log('****Multer Error: ', err)}
+     
+    //           console.log(req.file);
+     
+    //         //   user.name = req.body.name;
+    //         //   user.email = req.body.email;
+     
+    //           if(req.file){
+     
+    //              // if(user.avatar){
+    //              //     fs.unlinkSync(path.join(__dirname, '..' , user.avatar));
+    //              // }
+     
+    //              // this is saving the path of the uploaded file into the avatar field in the user
+    //              student.avatar = Student.avatarPath+'/'+req.file.filename;
+    //           }
+     
+    //           student.save();
+    //           return res.redirect('back');
+     
+    //         })
+             
+    //     } catch (err) {
+    //       console.error(err);
+    //       return res.status(500).send('Internal Server Error');
+    //     }
+    //   }else {
+    //     return res.status(401).send('Unauthorised');
+    //   }
+    const studentId = req.student._id.toString();
+      
+    if (studentId === req.params.id) {
+        
+        //console.log(req.body.Pimage)
+      try {
+        const updatedStudent = await Student.findByIdAndUpdate(
+          studentId,
+          {$set: req.body},
+          { new: true } // Return the updated document
+        );
+  
+        if (!updatedStudent) {
+            
+          return res.status(404).send('Student not found');
+        }
+       
+        console.log(req)
+        // Handle file upload if applicable
+        // if (req.body.Pimage) {console.log(req.body.Pimage)
+        //   updatedStudent.Pimage = path.join(ProfileImage_PATH, req.file.filename); //Student.avatarPath + '/' + req.body.Pimage;
+        //   await updatedStudent.save();
+        // }
+        if (req.files) {
+            console.log(req.files.Pimage.name);
+            updatedStudent.Pimage = path.join(ProfileImage_PATH, req.files.Pimage.name);
+            await updatedStudent.save();
+          }
+
+        return res.redirect('/');
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+    } else {
+      return res.status(401).send('Unauthorized');
+    }
+  });
+  
+// router.patch('/profile/:id', studentAuth,async(req, res) => {
+//     console.log(req.student._id.toString() === req.params.id);
+//      if (req.student._id.toString() === req.params.id) {
+//         try {
+//           const student = await Student.findById(req.params.id);
+    
+//           // Loop through properties in req.body and update student object
+//           for (const key in req.body) {
+//             if (key !== 'Pimage') {
+//               student[key] = req.body[key];
+//             }
+//           }
+         
+//           console.log(req.file);
+
+//           if (req.file) {
+//             // if (student.Pimage) {
+//             //   fs.unlinkSync(path.join(__dirname, '..', student.Pimage));
+//             // }
+//             student.Pimage = student.avatarPath+ '/' + req.file.filename;
+//           }
+
+//           await student.save();
+//           return res.redirect('/');
+//         } catch (err) {
+//           console.error(err);
+//           return res.status(500).send('Internal Server Error');
+//         }
+
+//       } else {
+//         return res.status(401).send('Unauthorized');
+//       }
+// });
 
 //logout
 router.delete('/logout', studentAuth, (req, res) => {

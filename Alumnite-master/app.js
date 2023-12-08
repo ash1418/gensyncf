@@ -6,7 +6,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 var sockets = require('./server/loaders')
 const router = require('./server/routes');
+const emailTransported = require('./emailTransporter');
 require('dotenv').config();
+
 
 const PORT = process.env.PORT || 4000;
 
@@ -19,6 +21,9 @@ app.use('/', router);
 app.get("/getData",(req,res)=>{
     res.send("Hello");
 })
+
+app.use('/uploads', express.static(__dirname +'/uploads'));
+
 mongoose.set('useFindAndModify', false);
 // mongoose.connect(
 //     process.env.MONGODB_URI, 
@@ -27,7 +32,7 @@ mongoose.set('useFindAndModify', false);
 //         autoIndex: true
 //     }
 // );
-mongoose.connect('mongodb://localhost/adminn',{
+mongoose.connect('mongodb://localhost/admimmm',{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     family: 4

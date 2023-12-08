@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const multer = require('multer');
+const path = require('path');
+const ProfileImage_PATH = path.join('/uploads/users/avatars');
 
 const StudentSchema = new mongoose.Schema({
     email: {
@@ -14,6 +16,10 @@ const StudentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    // verificationCode:{
+    //     type: String
+    // },
     // collegeId : {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'College',
@@ -52,7 +58,7 @@ const StudentSchema = new mongoose.Schema({
         type: String,
     },
 
-    // verified: {
+    // isVerified: {
     //     type: Boolean,
     //     default: false
     // },
@@ -146,7 +152,7 @@ const StudentSchema = new mongoose.Schema({
             type: String
         }
     },
-    imageUrl: {
+    Pimage: {
         type: String
     },
     skills: [{
@@ -155,6 +161,19 @@ const StudentSchema = new mongoose.Schema({
     }]
 });
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, '..' , ProfileImage_PATH));
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+  })
+  
+  //statics methods 
+StudentSchema.statics.uploadedAvatar = multer({ storage: storage }).single('Pimage');
+StudentSchema.statics.avatarPath = ProfileImage_PATH;
 
 StudentSchema.methods.generateAuthToken = function(){
     var student = this;
@@ -168,6 +187,13 @@ StudentSchema.methods.generateAuthToken = function(){
         return token;
     });
 }
+
+StudentSchema.methods.generateVerificationCode = function () {
+    const student = this;
+    const verificationCode = crypto.randomBytes(3).toString('hex'); // Change the length as needed
+    student.verificationCode = verificationCode;
+    return verificationCode;
+  };
 
 StudentSchema.statics.findByToken = function(token){
     var Student = this;

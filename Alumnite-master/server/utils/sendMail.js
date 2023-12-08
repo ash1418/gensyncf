@@ -11,9 +11,9 @@ module.exports = async function sendMail(to, subject, message, callback){
 
     const mailOptions = {
         from: 'jatinranka00@gmail.com',
-        to,
-        subject,
-        html: message
+        to :email,
+        subject: subject,
+        text:text
     };
     
     transporter.sendMail(mailOptions, function (err, info) {

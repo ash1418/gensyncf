@@ -738,6 +738,8 @@ router.post('/notices', collegeAuth, (req, res) => {
         });
 });
 
+
+
 router.get('/notices', collegeAuth, (req, res) => {
 
     Notice
